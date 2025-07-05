@@ -24,11 +24,12 @@ public class AuthService {
         User user = new User();
         user.setEmail(request.getEmail());
         user.setName(request.getName());
-        user.setPassword(request.getPassword());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        userRepo.save(user);
         return jwtTokenUtil.generateToken(user.getEmail());
     }
     public String LoginUser(LoginRequest request){
-        User user = (User) userRepo.findByEmail(request.getEmail()).orElseThrow(()->new RuntimeException("Invalid Credentials"));
+        User user = userRepo.findByEmail(request.getEmail()).orElseThrow(()->new RuntimeException("Invalid Credentials"));
         if (!passwordEncoder.matches(request.getPassword(),user.getPassword())){
             throw new RuntimeException("Invalid Credentials");
         }
@@ -36,7 +37,7 @@ public class AuthService {
 
     }
     public User getUser(String email){
-        return (User) userRepo.findByEmail(email).orElseThrow(()->new RuntimeException("User not found"));
+        return userRepo.findByEmail(email).orElseThrow(()->new RuntimeException("User not found"));
     }
 
 }

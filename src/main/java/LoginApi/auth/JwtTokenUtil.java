@@ -19,7 +19,6 @@ import javax.crypto.spec.SecretKeySpec;
 public class JwtTokenUtil {
     @Value("${JWT_SECRET}")
     private String SECRET_KEY;
-    private Key key;
     private final long ACCESS_TOKEN_EXPIRATION = 60*60*1000;
 
     public Key getSigningKey(){
@@ -53,7 +52,8 @@ public class JwtTokenUtil {
     }
     public boolean validateToken(String token , UserDetails userDetails){
         String userName = getUserName(token);
-        return userName.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        boolean notExpired = isTokenExpired(token);
+        return userName.equals(userDetails.getUsername()) && notExpired;
     }
     public String getUserName(String token){
         try{

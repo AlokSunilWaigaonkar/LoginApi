@@ -25,6 +25,7 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("token",token));
     }
 
+    @PostMapping("/login")
     public ResponseEntity<Map<String,String>> loginUser(@RequestBody LoginRequest request){
         String token = authService.LoginUser(request);
         return ResponseEntity.ok(Map.of("token",token));
